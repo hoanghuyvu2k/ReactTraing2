@@ -1,0 +1,17 @@
+.color-wrapper{
+    .sketch-picker{
+        position:absolute;
+        right: 0;
+        z-index: 21;
+    }
+    .box-color{
+        width: 36px;
+        height: 36px;
+        position: absolute;
+        top: 24px;
+        right: 0;
+        z-index: 20;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+}

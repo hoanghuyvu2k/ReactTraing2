@@ -1,0 +1,14 @@
+.home-page{
+    .Polaris-Frame-ContextualSaveBar .Polaris-Frame-ContextualSaveBar__LogoContainer {
+        display: none;
+    }
+    .wrapper-input{
+       position: relative;
+    }
+    .Polaris-Tabs__Tab--selected .Polaris-Tabs__Title::before {
+        background: #f64680;
+    }
+    .apprearance-input{
+        width: 48%;
+    }
+}
