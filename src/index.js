@@ -6,11 +6,15 @@ import reportWebVitals from "./reportWebVitals";
 import "@shopify/polaris/build/esm/styles.css";
 import enTranslations from "@shopify/polaris/locales/en.json";
 import { AppProvider, Page, Card, Button } from "@shopify/polaris";
+import { Provider } from "react-redux";
+import store from "./store/store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <AppProvider i18n={enTranslations}>
-    <App />
-  </AppProvider>
+  <Provider store={store}>
+    <AppProvider i18n={enTranslations}>
+      <App />
+    </AppProvider>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

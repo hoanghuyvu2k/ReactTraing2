@@ -16,6 +16,7 @@ export const tabs = [
 export const listSchema = [
   {
     type: "position",
+    isShowContent: true,
     text: "Widget Position",
     icon: ReplaceMajor,
     contents: [
@@ -29,6 +30,7 @@ export const listSchema = [
   },
   {
     type: "apprearance",
+    isShowContent: true,
     text: "Widget apprearance",
     icon: PaintBrushMajor,
     contents: [
@@ -118,6 +120,7 @@ export const listSchema = [
   },
   {
     type: "textWidget",
+    isShowContent: true,
     text: "Widget Text",
     icon: TextMajor,
     tabs: [

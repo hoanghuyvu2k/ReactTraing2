@@ -12,15 +12,24 @@ import HeaderCard from "./components/HeaderCard/HeaderCard";
 import { useState, useCallback } from "react";
 import _, { clone, set } from "lodash";
 import InputType from "./components/InputType";
-import { listSchema, tabs } from "../../constant";
+import { tabs } from "../../constant";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateIsShowSaveBar,
+  updateListSchema,
+} from "../../store/modules/setting/actions";
 function Home() {
   const [selected, setSelected] = useState(0);
+  const listSchema = useSelector((state) => state.setting.listSchema);
+  const isShowSaveBar = useSelector((state) => state.setting.isShowSaveBar);
+  const dispatch = useDispatch();
   const handleTabChange = useCallback(
     (selectedTabIndex) => setSelected(selectedTabIndex),
     []
   );
-  const [listSetting, setListSetting] = useState(listSchema);
+  const [listSetting, setListSetting] = useState(_.cloneDeep(listSchema));
   const handleChangeValueInput = (indexSection, indexInput, value, type) => {
+    dispatch(updateIsShowSaveBar(true));
     let isInvalid = value === "";
     let settings = _.cloneDeep(listSetting);
     if (type === "subcheckbox") {
@@ -37,6 +46,8 @@ function Home() {
     setListSetting(settings);
   };
   const handleSaveAction = () => {
+    dispatch(updateIsShowSaveBar(false));
+    dispatch(updateListSchema(listSetting));
     let payload = listSetting.map((setting) => {
       let cloneSetting = {};
       cloneSetting.type = setting.type;
@@ -67,21 +78,35 @@ function Home() {
     });
     console.log(payload);
   };
+  const handleDiscard = () => {
+    setListSetting(listSchema);
+    dispatch(updateIsShowSaveBar(false));
+  };
+  const handleClickIconheader = (index) => {
+    let settings = _.cloneDeep(listSetting);
+    settings[index].isShowContent = !settings[index].isShowContent;
+    setListSetting(settings);
+  };
   return (
     <div className="home-page">
       <Frame>
-        <ContextualSaveBar
-          message="Unsaved changes"
-          fullWidth={true}
-          saveAction={{
-            onAction: () => handleSaveAction(),
-            loading: false,
-            disabled: false,
-          }}
-          discardAction={{
-            onAction: () => console.log("add clear form logic"),
-          }}
-        />
+        {isShowSaveBar ? (
+          <ContextualSaveBar
+            message="Unsaved changes"
+            fullWidth={true}
+            saveAction={{
+              onAction: () => handleSaveAction(),
+              loading: false,
+              disabled: false,
+            }}
+            discardAction={{
+              onAction: () => handleDiscard(),
+            }}
+          />
+        ) : (
+          <></>
+        )}
+
         <Page>
           <div className="mt-20 mb-20">
             <div className="mb-2 font-semibold text-lg">Widget Setting</div>
@@ -93,8 +118,12 @@ function Home() {
                       <HeaderCard
                         text={setting.text}
                         icon={setting.icon}
+                        isShowContent={setting.isShowContent}
+                        onClickIcon={() => {
+                          handleClickIconheader(indexSetting);
+                        }}
                       ></HeaderCard>
-                      {setting.type === "position" ? (
+                      {setting.type === "position" && setting.isShowContent ? (
                         <div>
                           {setting.contents.map((content, indexContent) => {
                             return (
@@ -117,7 +146,8 @@ function Home() {
                       ) : (
                         <></>
                       )}
-                      {setting.type === "apprearance" ? (
+                      {setting.type === "apprearance" &&
+                      setting.isShowContent ? (
                         <div className="flex flex-wrap gap-x-8 gap-y-3">
                           {setting.contents.map((content, indexContent) => {
                             return (
@@ -156,7 +186,8 @@ function Home() {
                       ) : (
                         <></>
                       )}
-                      {setting.type === "textWidget" ? (
+                      {setting.type === "textWidget" &&
+                      setting.isShowContent ? (
                         <Tabs
                           tabs={tabs}
                           selected={selected}
